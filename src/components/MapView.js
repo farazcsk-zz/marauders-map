@@ -6,23 +6,74 @@ class MapView extends React.Component {
     super(props);
 
     this.state = {
-      located: false,
-      lat: 51.5073509,
-      lng: -0.12775829999998223,
-      zoom: 100,
+      users: [],
     };
+    this.cb = this.cb.bind(this);
   }
 
   componentWillMount() {
-    navigator.geolocation.getCurrentPosition((currentPosition) => {
-      this.setState({
-        ...this.state,
-        located: true,
-        lat: currentPosition.coords.latitude,
-        lng: currentPosition.coords.longitude,
-        zoom: 100,
-      });
+    this.pubNub = new PubNub({
+      publishKey: 'pub-c-260e570c-07b0-4988-805c-1c6e0014407d',
+      subscribeKey: 'sub-c-07c504da-b962-11e6-b490-02ee2ddab7fe',
     });
+    this.pubNub.addListener({
+      status: (statusEvent) => {
+        // console.log(statusEvent);
+      },
+      message: (message) => {
+        if (message.message.action === 'UPDATED_LOCATION') {
+          // get all users
+          this.getAllUserState(cb);
+        } else {
+          // some other shit.
+          // console.log(message);
+        }
+      },
+      presence: (presenceEvent) => {
+          // handle presence
+        // console.log(presenceEvent);
+      },
+    });
+    // Subscribing to secure channel
+    this.pubNub.subscribe({
+      channels: ['secure'],
+    });
+
+    this.pubNub.hereNow(
+      {
+        channels: ['secure'],
+        includeUUIDs: true,
+        includeState: true,
+      },
+      (status, response) => {
+        this.setState({users: response.channels.secure.occupants});
+        console.log(this.state);
+      }
+      );
+    navigator.geolocation.getCurrentPosition((currentPosition) => {
+      this.updateLocation(currentPosition.coords.longitude, currentPosition.coords.latitude);
+      // console.log('dsklfjhgdflksjh');
+      // this.setState({
+      //   ...this.state,
+      //   located: true,
+      //   lat: currentPosition.coords.latitude,
+      //   lng: currentPosition.coords.longitude,
+      //   zoom: 100,
+      // });
+    });
+  }
+
+  getAllUserState(cb) {
+    this.pubnub.hereNow(
+      {
+        channels: ['secure'],
+        includeUUIDs: true,
+        includeState: true,
+      },
+      function something(status, response) {
+        cb(response.channels.secure.occupants);
+      }
+      );
   }
 
   render() {
@@ -48,6 +99,29 @@ class MapView extends React.Component {
           }
         </Map>
       </div>
+    );
+  }
+  cb(users) {
+    this.setState({
+      ...this.state,
+      users,
+    });
+  }
+  updateLocation(long, lat) {
+    this.pubNub.setState(
+      {
+        state: { 'username': this.username, 'password': this.password, 'long': long, 'lat': lat},
+        channels: ['secure'],
+      },
+        (status, response) => {
+          const publishConfig = {
+            channel: 'secure',
+            message: {'password': 'lala', 'action': 'UPDATED_LOCATION'},
+          };
+          this.pubNub.publish(publishConfig, (status, response) => {
+            // console.log("published to channel");
+          });
+        }
     );
   }
 }

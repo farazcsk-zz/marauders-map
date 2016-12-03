@@ -17,7 +17,7 @@ class pubNub {
         status: function(statusEvent) {
         },
         message: function(message) {
-            if (message.message.action == "UPDATED_LOCATION") {
+            if (message.message.action === 'UPDATED_LOCATION') {
               // get all users
               getAllUserState(function(users) {
                 // update map with said users
@@ -60,19 +60,19 @@ class pubNub {
     }
 
     updateLocation(long, lat) {
-      this.pubnub.setState(
+      this.pubNub.setState(
           {
               state: { "username": this.username, "password": this.password, "long": long, "lat": lat},
               channels: ['secure']
           },
-          function (status, response) {
+           (status, response) => {
 
               var publishConfig = {
                 channel : "secure",
                 message : {"password": "lala", "action": "UPDATED_LOCATION"}
             }
             
-            pubnub.publish(publishConfig, function(status, response) {
+            pubNub.publish(publishConfig, (status, response) => {
                 console.log("published to channel")
             })
           }
