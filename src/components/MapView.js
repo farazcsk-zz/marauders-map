@@ -55,6 +55,7 @@ class MapView extends React.Component {
 
   componentWillUnmount() {
     this.pubNub.unsubscribe({ channel: 'secure' });
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   getAllUserState() {
@@ -127,7 +128,7 @@ class MapView extends React.Component {
 
           this.pubNub.publish(publishConfig, () => {
             setTimeout(() => {
-              navigator.geolocation.getCurrentPosition((currentPosition) => {
+              this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
                 this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
               },
             (error) => {

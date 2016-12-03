@@ -94,6 +94,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "vcap_services": "^0.2.0",
     "watson-developer-cloud": "^2.11.0",
+    "watson-speech": "^0.21.0",
     "winston": "^2.1.1"
   },
   "keywords": [
