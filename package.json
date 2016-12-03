@@ -86,7 +86,10 @@
     "helmet": "^2.0.0",
     "http-proxy": "^1.12.1",
     "leaflet": "^1.0.2",
+    "material-ui": "^0.16.4",
+    "react-bootstrap": "^0.30.7",
     "react-leaflet": "^1.0.0-rc.3",
+    "react-tap-event-plugin": "^2.0.1",
     "winston": "^2.1.1"
   },
   "keywords": [
