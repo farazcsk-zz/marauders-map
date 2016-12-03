@@ -9,7 +9,7 @@ class MapView extends React.Component {
       located: false,
       lat: 51.5073509,
       lng: -0.12775829999998223,
-      zoom: 7,
+      zoom: 100,
     };
   }
 
@@ -20,7 +20,7 @@ class MapView extends React.Component {
         located: true,
         lat: currentPosition.coords.latitude,
         lng: currentPosition.coords.longitude,
-        zoom: 10,
+        zoom: 100,
       });
     });
   }

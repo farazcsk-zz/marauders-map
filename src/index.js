@@ -24,7 +24,9 @@ injectTapEventPlugin();
 ReactDOM.render(
   <div>
     <MuiThemeProvider>
-      <AppBar />
+      <AppBar
+        showMenuIconButton={false}
+      />
     </MuiThemeProvider>
     <Provider store={ store }>
       <Router history={ history }>
