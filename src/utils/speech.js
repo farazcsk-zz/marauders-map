@@ -20,12 +20,18 @@ function getTextFromMic(outputId) {
 }
 
 function checkForCorrectPassword(inputId, onCorrectPassword) {
+  const validPasswords = [
+    "I solemnly swear that I'm up to no good. ",
+    "I solemnly swear that I am up to no good. ",
+    "Open",
+    "Open. "
+  ];
   let password = $('#password');
   console.log(password, password.text());
 
   let observer = new MutationObserver((mutations) => {
     console.log('"' + password.text() + '"');
-    if (password.text() === "I solemnly swear that I'm up to no good. ") {
+    if (validPasswords.includes(password.text())) {
       console.log('naughty!');
       onCorrectPassword();
     }
