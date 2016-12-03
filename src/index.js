@@ -7,7 +7,9 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-
+import { AppBar } from 'material-ui';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import routes from './store/routes';
 import configureStore from './store/configure-store';
 
@@ -17,8 +19,15 @@ import './styles/index.css';
 const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 
+injectTapEventPlugin();
+
 ReactDOM.render(
   <div>
+    <MuiThemeProvider>
+      <AppBar
+        showMenuIconButton={false}
+      />
+    </MuiThemeProvider>
     <Provider store={ store }>
       <Router history={ history }>
         { routes }

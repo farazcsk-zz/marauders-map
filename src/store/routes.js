@@ -1,7 +1,11 @@
 import React from 'react';
 import { Route } from 'react-router';
+import Login from '../components/Login';
 import App from '../containers/app';
 
 export default (
-  <Route path="/" component={ App } />
+  <div>
+    <Route path="/" component={ Login } />
+    <Route path="/mischief" component={ App } />
+  </div>
 );

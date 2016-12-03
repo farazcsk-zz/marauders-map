@@ -1,0 +1,9 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "javascript.validate.enable": false,
+    "editor.renderLineHighlight": false,
+    "editor.fontFamily": "Roboto mono",
+    "emmet.syntaxProfiles": {
+        "javascript": "html"
+     }
+}
