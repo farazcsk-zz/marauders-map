@@ -19,7 +19,20 @@ function getTextFromMic(outputId) {
     });
 }
 
+function say(text) {
+  fetch('/api/text-to-speech/token')
+    .then(function(response) {
+      return response.text();
+    }).then(function (token) {
+      WatsonSpeech.TextToSpeech.synthesize({
+        text: text,
+        token: token
+      });
+    });
+}
+
 function checkForCorrectPassword(inputId, onCorrectPassword) {
+  let correct = false;
   const validPasswords = [
     "I solemnly swear that I'm up to no good. ",
     "I solemnly swear that I am up to no good. ",
@@ -32,12 +45,17 @@ function checkForCorrectPassword(inputId, onCorrectPassword) {
   let observer = new MutationObserver((mutations) => {
     console.log('"' + password.text() + '"');
     if (validPasswords.includes(password.text())) {
+      correct = true;
       console.log('naughty!');
       onCorrectPassword();
     }
   });
 
   observer.observe(password.get(0), {characterData: true, childList: true});
+
+  setTimeout(() => {
+    if (!correct) { say('fuck off snape'); }
+  }, 5000);
 }
 
-export { getTextFromMic, checkForCorrectPassword };
+export { getTextFromMic, checkForCorrectPassword, say };
