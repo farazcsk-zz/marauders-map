@@ -1,5 +1,7 @@
 class pubNub {
-	constructor(username, password, cb) {
+
+	// constructor sends back all useres
+	constructor(username, password, updateMapFunction, cb) {
 		// set details
 		this.username = username;
 		this.password = password;
@@ -15,7 +17,20 @@ class pubNub {
 		    status: function(statusEvent) {
 		    },
 		    message: function(message) {
-		        console.log("New Message!!", message.message);
+		        if (message.message.action == "UPDATED_LOCATION") {
+		        	
+		        	// get all users
+		        	getAllUserState(function(users§) {
+		        		
+		        		// update map with said users
+		        		updateMapFunction(users);
+		        	});
+
+		        } else {
+
+		        	// some other shit.
+		        	console.log(message);
+		        }
 		    },
 		    presence: function(presenceEvent) {
 		        // handle presence
@@ -28,6 +43,12 @@ class pubNub {
 		});
 
 		// getting all other users
+		getAllUserState(function(users) {
+			cb(users);
+		});
+	}
+
+	getAllUserState(cb) {
 		this.pubnub.hereNow(
 		    {
 		        channels: ["secure"], 
@@ -47,7 +68,7 @@ class pubNub {
 		        channels: ['secure']
 		    },
 		    function (status, response) {
-		        console.log("set state")
+		        publishSampleMessage({"password": "lala", "action": "UPDATED_LOCATION"})
 		    }
 		);
 	}
