@@ -6,6 +6,6 @@ import App from '../containers/app';
 export default (
   <div>
     <Route path="/" component={ Login } />
-    <Route path="/mischief" component={ App } />
+    <Route path="/mischief/:name" component={ App } />
   </div>
 );
