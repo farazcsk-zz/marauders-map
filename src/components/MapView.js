@@ -11,7 +11,7 @@ class MapView extends React.Component {
       lng: -0.020013899999980822,
       zoom: 100,
     };
-    this.cb = this.cb.bind(this);
+    this.getAllUserState = this.getAllUserState.bind(this);
   }
 
   componentWillMount() {
@@ -22,16 +22,13 @@ class MapView extends React.Component {
 
     this.pubNub.addListener({
       status: (statusEvent) => {
-        console.log('statusEvent: ', statusEvent);
+        // console.log('statusEvent: ', statusEvent);
       },
       message: (message) => {
-        if (message.message.action === 'UPDATED_LOCATION') {
-          // get all users
-          this.getAllUserState(this.cb);
-        } else {
-          // some other shit.
-          // console.log(message);
-        }
+        console.log(message);
+        // get all users]
+        console.log('updated location.....');
+        this.getAllUserState();
       },
       presence: (presenceEvent) => {
           // handle presence
@@ -44,20 +41,7 @@ class MapView extends React.Component {
       channels: ['secure'],
     });
 
-    this.pubNub.hereNow(
-      {
-        channels: ['secure'],
-        includeUUIDs: true,
-        includeState: true,
-      },
-      (status, response) => {
-        this.setState({
-          ...this.state,
-          users: response.channels.secure.occupants,
-        });
-        console.log(this.state);
-      }
-    );
+    this.getAllUserState();
 
     navigator.geolocation.getCurrentPosition((currentPosition) => {
       this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
@@ -69,16 +53,19 @@ class MapView extends React.Component {
     );
   }
 
-  getAllUserState(cb) {
-    console.log('getting all user state');
+  getAllUserState() {
+    console.log('setting statingzzz...');
     this.pubNub.hereNow(
       {
         channels: ['secure'],
         includeUUIDs: true,
         includeState: true,
       },
-      function something(status, response) {
-        cb(response.channels.secure.occupants);
+      (status, response) => {
+        this.setState({
+          ...this.state,
+          users: response.channels.secure.occupants,
+        });
       }
       );
   }
@@ -116,13 +103,6 @@ class MapView extends React.Component {
     );
   }
 
-  cb(users) {
-    this.setState({
-      ...this.state,
-      users,
-    });
-  }
-
   updateLocation(lat, lng) {
     console.log('updating location');
     this.pubNub.setState(
@@ -133,7 +113,12 @@ class MapView extends React.Component {
         (status, response) => {
           const publishConfig = {
             channel: 'secure',
-            message: {lat, lng},
+            message: {
+              username: '',
+              password: 'lala',
+              lat,
+              lng,
+            },
           };
 
           this.pubNub.publish(publishConfig, () => {
