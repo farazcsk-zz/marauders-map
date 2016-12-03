@@ -42,7 +42,7 @@ app.listen(PORT, (err) => {
 // however bluemix automatically adds https support at http://<myapp>.mybluemix.net
 var fs = require('fs'),
   https = require('https'),
-  HTTPS_PORT = 3001;
+  HTTPS_PORT = process.env.HTTPS_PORT || 3001;
 
 var options = {
   key: fs.readFileSync(__dirname + '/../keys/localhost.pem'),

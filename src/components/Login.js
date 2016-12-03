@@ -1,7 +1,7 @@
 import React from 'react';
 import { RaisedButton } from 'material-ui';
 import { browserHistory } from 'react-router';
-import { getTextFromMic, checkForCorrectPassword } from './../utils/speech.js';
+import { getTextFromMic, checkForCorrectPassword, say } from './../utils/speech.js';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
