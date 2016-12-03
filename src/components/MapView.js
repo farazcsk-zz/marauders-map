@@ -131,7 +131,7 @@ class MapView extends React.Component {
             },
             { enableHighAccuracy: true }
             );
-            }, 1000);});
+            }, 20);});
         }
     );
   }
