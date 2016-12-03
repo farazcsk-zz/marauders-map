@@ -1,5 +1,5 @@
 import React from 'react';
-import { RaisedButton } from 'material-ui';
+import { RaisedButton, TextField } from 'material-ui';
 import { browserHistory } from 'react-router';
 import { getTextFromMic, checkForCorrectPassword, say } from './../utils/speech.js';
 
@@ -10,24 +10,55 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
+      username: '',
+      reveal: false,
     };
+    this.showReveal = this.showReveal.bind(this);
+  }
+
+  showReveal() {
+    this.setState({
+      ...this.state,
+      reveal: true,
+    });
   }
 
   render() {
-    return (
+    const form = (
       <div>
-        <MuiThemeProvider>
-          <RaisedButton
-          label="I solemnly swear that I am up to no good"
-          onClick={() => {
-            getTextFromMic('password');
-            checkForCorrectPassword('password', () => {
-              browserHistory.push('/mischief');
+        <TextField
+          id="Username"
+          placeholder="Enter messr name"
+          onChange={(e) =>{
+            this.setState({
+              ...this.state,
+              username: e.target.value,
             });
           }}
         />
+        <br />
+        <RaisedButton
+          label="Enter"
+          onClick={() =>{
+            this.showReveal();
+          }}
+        />
+      </div>
+    );
+    return (
+      <div>
+        <MuiThemeProvider>
+          {this.state.reveal ? <RaisedButton
+          label="Reveal..."
+          onClick={() => {
+            getTextFromMic('password');
+            checkForCorrectPassword('password', () => {
+              browserHistory.push(`/mischief/${this.state.username}`);
+            });
+          }}
+        /> : form }
         </MuiThemeProvider>
-        <p id="password">hi</p>
+        <p id="password"></p>
       </div>
     );
   }
