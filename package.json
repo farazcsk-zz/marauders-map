@@ -83,13 +83,17 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "fs": "0.0.1-security",
     "helmet": "^2.0.0",
     "http-proxy": "^1.12.1",
+    "jquery": "^3.1.1",
     "leaflet": "^1.0.2",
     "material-ui": "^0.16.4",
     "react-bootstrap": "^0.30.7",
     "react-leaflet": "^1.0.0-rc.3",
     "react-tap-event-plugin": "^2.0.1",
+    "vcap_services": "^0.2.0",
+    "watson-developer-cloud": "^2.11.0",
     "winston": "^2.1.1"
   },
   "keywords": [
