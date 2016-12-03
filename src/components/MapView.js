@@ -7,6 +7,9 @@ class MapView extends React.Component {
 
     this.state = {
       users: [],
+      lat: 51.54435360000001,
+      lng: -0.020013899999980822,
+      zoom: 100,
     };
     this.cb = this.cb.bind(this);
   }
@@ -18,12 +21,12 @@ class MapView extends React.Component {
     });
     this.pubNub.addListener({
       status: (statusEvent) => {
-        // console.log(statusEvent);
+        console.log('statusEvent: ', statusEvent);
       },
       message: (message) => {
         if (message.message.action === 'UPDATED_LOCATION') {
           // get all users
-          this.getAllUserState(cb);
+          this.getAllUserState(this.cb);
         } else {
           // some other shit.
           // console.log(message);
@@ -31,7 +34,7 @@ class MapView extends React.Component {
       },
       presence: (presenceEvent) => {
           // handle presence
-        // console.log(presenceEvent);
+        console.log('presenceEvent: ', presenceEvent);
       },
     });
     // Subscribing to secure channel
@@ -46,7 +49,10 @@ class MapView extends React.Component {
         includeState: true,
       },
       (status, response) => {
-        this.setState({users: response.channels.secure.occupants});
+        this.setState({
+          ...this.state,
+          users: response.channels.secure.occupants,
+        });
         console.log(this.state);
       }
       );
@@ -64,7 +70,7 @@ class MapView extends React.Component {
   }
 
   getAllUserState(cb) {
-    this.pubnub.hereNow(
+    this.pubNub.hereNow(
       {
         channels: ['secure'],
         includeUUIDs: true,
@@ -101,6 +107,7 @@ class MapView extends React.Component {
       </div>
     );
   }
+
   cb(users) {
     this.setState({
       ...this.state,
@@ -119,7 +126,9 @@ class MapView extends React.Component {
             message: {'password': 'lala', 'action': 'UPDATED_LOCATION'},
           };
           this.pubNub.publish(publishConfig, (status, response) => {
-            // console.log("published to channel");
+            console.log('Published to channel');
+            console.log('status: ', status);
+            console.log('response: ', response);
           });
         }
     );
