@@ -16,6 +16,11 @@ import configureStore from './store/configure-store';
 // Global styles
 import './styles/index.css';
 
+import WatsonSpeech from 'watson-speech';
+window.WatsonSpeech = WatsonSpeech;
+import jquery from 'jquery';
+window.$ = jquery;
+
 const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 
