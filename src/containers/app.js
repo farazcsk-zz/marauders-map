@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import MapView from '../components/MapView';
+
 function mapStateToProps(/* state */) {
   return {
     // TODO: Add state to be mapped to props
@@ -16,9 +18,7 @@ function mapDispatchToProps(/* dispatch */) {
 class App extends React.Component {
   render() {
     return (
-      <div>
-        <h1>Hello World!</h1>
-      </div>
+      <MapView />
     );
   }
 }

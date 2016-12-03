@@ -85,6 +85,10 @@
     "express": "^4.13.3",
     "helmet": "^2.0.0",
     "http-proxy": "^1.12.1",
+    "leaflet": "^1.0.2",
+    "mapbox-gl": "^0.28.0",
+    "react-leaflet": "^1.0.0-rc.3",
+    "react-map-gl": "^1.7.2",
     "winston": "^2.1.1"
   },
   "keywords": [
