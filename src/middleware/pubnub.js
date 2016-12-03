@@ -1,7 +1,7 @@
 class pubNub {
 
 	// constructor sends back all useres
-	constructor(username, password, updateMapFunction, cb) {
+	constructor(username, password, updateMapFunction) {
 		// set details
 		this.username = username;
 		this.password = password;
@@ -44,7 +44,7 @@ class pubNub {
 
 		// getting all other users
 		getAllUserState(function(users) {
-			cb(users);
+			updateMapFunction(users);
 		});
 	}
 
@@ -68,7 +68,15 @@ class pubNub {
 		        channels: ['secure']
 		    },
 		    function (status, response) {
-		        publishSampleMessage({"password": "lala", "action": "UPDATED_LOCATION"})
+
+		        var publishConfig = {
+			        channel : "secure",
+			        message : {"password": "lala", "action": "UPDATED_LOCATION"}
+			    }
+			    
+			    pubnub.publish(publishConfig, function(status, response) {
+			        console.log("published to channel")
+			    })
 		    }
 		);
 	}
