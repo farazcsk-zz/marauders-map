@@ -12,6 +12,7 @@ class MapView extends React.Component {
       zoom: 100,
     };
     this.getAllUserState = this.getAllUserState.bind(this);
+    this.updateLocation = this.updateLocation.bind(this);
   }
 
   componentWillMount() {
@@ -43,13 +44,17 @@ class MapView extends React.Component {
 
     this.getAllUserState();
 
-    navigator.geolocation.getCurrentPosition((currentPosition) => {
+    this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
       this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
     },
     (error) => {
       	console.log('Error: ', error);
     	},
-    { enableHighAccuracy: true }
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000,
+      }
     );
   }
 
@@ -126,17 +131,21 @@ class MapView extends React.Component {
             },
           };
 
-          this.pubNub.publish(publishConfig, () => {
-            setTimeout(() => {
-              this.watchID = navigator.geolocation.watchPosition((currentPosition) => {
-                this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
-              },
-            (error) => {
-                console.log('Error: ', error);
-            },
-            { enableHighAccuracy: true }
-            );
-            }, 20);});
+          this.pubNub.publish(publishConfig
+            // , () => {
+            // setTimeout(() => {
+            // const watchID = navigator.geolocation.watchPosition((currentPosition) => {
+            //   this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
+            // },
+            // (error) => {
+            //   console.log('Error: ', error);
+            // },
+            // { enableHighAccuracy: true }
+            // );
+            // }
+            // , 20);
+          // }
+        );
         }
     );
   }
