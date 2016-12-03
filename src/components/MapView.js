@@ -19,6 +19,7 @@ class MapView extends React.Component {
       publishKey: 'pub-c-260e570c-07b0-4988-805c-1c6e0014407d',
       subscribeKey: 'sub-c-07c504da-b962-11e6-b490-02ee2ddab7fe',
     });
+
     this.pubNub.addListener({
       status: (statusEvent) => {
         console.log('statusEvent: ', statusEvent);
@@ -37,6 +38,7 @@ class MapView extends React.Component {
         console.log('presenceEvent: ', presenceEvent);
       },
     });
+
     // Subscribing to secure channel
     this.pubNub.subscribe({
       channels: ['secure'],
@@ -55,21 +57,20 @@ class MapView extends React.Component {
         });
         console.log(this.state);
       }
-      );
+    );
+
     navigator.geolocation.getCurrentPosition((currentPosition) => {
       this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
-      // console.log('dsklfjhgdflksjh');
-      // this.setState({
-      //   ...this.state,
-      //   located: true,
-      //   lat: currentPosition.coords.latitude,
-      //   lng: currentPosition.coords.longitude,
-      //   zoom: 100,
-      // });
-    });
+    },
+    (error) => {
+      	console.log('Error: ', error);
+    	},
+    { enableHighAccuracy: true }
+    );
   }
 
   getAllUserState(cb) {
+    console.log('getting all user state');
     this.pubNub.hereNow(
       {
         channels: ['secure'],
@@ -121,7 +122,9 @@ class MapView extends React.Component {
       users,
     });
   }
+
   updateLocation(lat, lng) {
+    console.log('updating location');
     this.pubNub.setState(
       {
         state: { 'username': this.username, 'password': this.password, 'lat': lat, 'lng': lng},
@@ -130,13 +133,20 @@ class MapView extends React.Component {
         (status, response) => {
           const publishConfig = {
             channel: 'secure',
-            message: {'password': 'lala', 'action': 'UPDATED_LOCATION'},
+            message: {lat, lng},
           };
-          this.pubNub.publish(publishConfig, (status, response) => {
-            console.log('Published to channel');
-            console.log('status: ', status);
-            console.log('response: ', response);
-          });
+
+          this.pubNub.publish(publishConfig, () => {
+            setTimeout(() => {
+              navigator.geolocation.getCurrentPosition((currentPosition) => {
+                this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
+              },
+            (error) => {
+                console.log('Error: ', error);
+            },
+            { enableHighAccuracy: true }
+            );
+            }, 1000);});
         }
     );
   }
