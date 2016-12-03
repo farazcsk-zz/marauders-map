@@ -12,6 +12,7 @@ class MapView extends React.Component {
       zoom: 100,
     };
     this.getAllUserState = this.getAllUserState.bind(this);
+    this.locate = this.locate.bind(this);
   }
 
   componentWillMount() {
@@ -43,18 +44,13 @@ class MapView extends React.Component {
 
     this.getAllUserState();
 
-    navigator.geolocation.getCurrentPosition((currentPosition) => {
-      this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
-    },
-    (error) => {
-      	console.log('Error: ', error);
-    	},
-    { enableHighAccuracy: true }
-    );
+    this.locate();
   }
 
   componentWillUnmount() {
+    console.log('mounting');
     this.pubNub.unsubscribe({ channel: 'secure' });
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   getAllUserState() {
@@ -71,7 +67,7 @@ class MapView extends React.Component {
           users: response.channels.secure.occupants,
         });
       }
-      );
+    );
   }
 
   render() {
@@ -107,6 +103,24 @@ class MapView extends React.Component {
     );
   }
 
+  locate() {
+    const successHandler = (currentPosition) => {
+      this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
+    };
+
+    const errorHandler = (error) => {
+      	console.log('Error: ', error);
+    	};
+
+    const opts = { enableHighAccuracy: true, timeout: 500, maximumAge: Infinity };
+
+    this.watchID = navigator.geolocation.watchPosition(
+      successHandler,
+      errorHandler,
+      opts,
+    );
+  }
+
   updateLocation(lat, lng) {
     console.log('updating location');
     this.pubNub.setState(
@@ -125,17 +139,9 @@ class MapView extends React.Component {
             },
           };
 
-          this.pubNub.publish(publishConfig, () => {
-            setTimeout(() => {
-              navigator.geolocation.getCurrentPosition((currentPosition) => {
-                this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
-              },
-            (error) => {
-                console.log('Error: ', error);
-            },
-            { enableHighAccuracy: true }
-            );
-            }, 20);});
+          this.pubNub.publish(publishConfig, (m) => {
+            console.log('m: ', m);
+          });
         }
     );
   }
