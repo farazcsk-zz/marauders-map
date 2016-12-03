@@ -57,7 +57,7 @@ class MapView extends React.Component {
       }
       );
     navigator.geolocation.getCurrentPosition((currentPosition) => {
-      this.updateLocation(currentPosition.coords.longitude, currentPosition.coords.latitude);
+      this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
       // console.log('dsklfjhgdflksjh');
       // this.setState({
       //   ...this.state,
@@ -94,14 +94,21 @@ class MapView extends React.Component {
           <TileLayer
             url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWljLWNzcyIsImEiOiJjaXc5YmVjOXgwMDEyMnlxN3pvdGRjeTlxIn0.m8ImN5PX2X4OE1HWHv7n-Q"
             attribution="<attribution>" />
-          { this.state.located ?
-            <Marker position={position}>
-              <Popup>
-                <span>You're a wizard Harry!</span>
-              </Popup>
-            </Marker>
-            :
-            null
+          {
+            this.state.users.map((user) => {
+              const userPosition = [user.state.lat, user.state.lng];
+
+              return (
+                <Marker
+                  key={user.uuid}
+                  position={userPosition}
+                >
+                  <Popup>
+                    <span>You're a wizard Harry!</span>
+                  </Popup>
+                </Marker>
+              );
+            })
           }
         </Map>
       </div>
@@ -114,10 +121,10 @@ class MapView extends React.Component {
       users,
     });
   }
-  updateLocation(long, lat) {
+  updateLocation(lat, lng) {
     this.pubNub.setState(
       {
-        state: { 'username': this.username, 'password': this.password, 'long': long, 'lat': lat},
+        state: { 'username': this.username, 'password': this.password, 'lat': lat, 'lng': lng},
         channels: ['secure'],
       },
         (status, response) => {
