@@ -53,6 +53,10 @@ class MapView extends React.Component {
     );
   }
 
+  componentWillUnmount() {
+    this.pubNub.unsubscribe({ channel: 'secure' });
+  }
+
   getAllUserState() {
     console.log('setting statingzzz...');
     this.pubNub.hereNow(
