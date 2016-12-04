@@ -1,6 +1,8 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-import FloatingActionButton from 'material-ui';
+import { FloatingActionButton } from 'material-ui';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Exit from 'material-ui/svg-icons/action/exit-to-app';
 import { browserHistory } from 'react-router';
 import { getTextFromMic, checkForCorrectPassword, checkForCorrectGoodbye } from './../utils/speech.js';
 
@@ -75,18 +77,41 @@ class MapView extends React.Component {
   }
 
   render() {
+    const buttonStyle = {
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+      zIndex: 9999,
+    };
+    const messageStyle = {
+      position: 'absolute',
+      top: '45vh',
+      right: '20vw',
+      color: '#FFFFFF',
+      zIndex: 9999,
+    };
     const position = [this.state.lat, this.state.lng];
     return (
       <div>
-        <p id="goodbye"></p>
-        <button
-          onClick={() => {
-            getTextFromMic('goodbye');
-            checkForCorrectGoodbye('goodbye', () => {
-              browserHistory.push('/');
-            });
-          }}
-        />
+        <h2
+          id="goodbye"
+          style={messageStyle}
+        >
+        </h2>
+        <div style={buttonStyle}>
+          <MuiThemeProvider>
+          <FloatingActionButton
+            onClick={() => {
+              getTextFromMic('goodbye');
+              checkForCorrectGoodbye('goodbye', () => {
+                browserHistory.push('/');
+              });
+            }}
+          >
+            <Exit />
+          </FloatingActionButton>
+        </MuiThemeProvider>
+      </div>
         <Map
           style={{height: '100vh'}}
           center={position}
