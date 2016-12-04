@@ -1,5 +1,7 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import FloatingActionButton from 'material-ui';
+import { getTextFromMic, checkForCorrectPassword, checkForCorrectGoodbye } from './../utils/speech.js';
 
 class MapView extends React.Component {
   constructor(props) {
@@ -75,6 +77,15 @@ class MapView extends React.Component {
     const position = [this.state.lat, this.state.lng];
     return (
       <div>
+        <p id="goodbye"></p>
+        <button
+          onClick={() => {
+            getTextFromMic('goodbye');
+            checkForCorrectGoodbye('goodbye', () => {
+              browserHistory.push('/');
+            });
+          }}
+        />
         <Map
           style={{height: '100vh'}}
           center={position}
