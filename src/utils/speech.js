@@ -91,7 +91,7 @@ function checkSpeechMatches(speechId, matches, onCorrect, onTimeout, timeout) {
 
   setTimeout(() => {
     if (!correct) { onTimeout(); }
-  }, (timeout || 5000));
+  }, timeout);
 }
 
 function getRandomInt(min, max) {

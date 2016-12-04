@@ -7,6 +7,8 @@ class MapView extends React.Component {
 
     this.state = {
       users: [],
+      username: 'user',
+      password: 'lala',
       lat: 51.54435360000001,
       lng: -0.020013899999980822,
       zoom: 100,
@@ -21,19 +23,9 @@ class MapView extends React.Component {
     });
 
     this.pubNub.addListener({
-      status: (statusEvent) => {
-        // console.log('statusEvent: ', statusEvent);
-      },
       message: (message) => {
-        // console.log(message);
-        // get all users]
-        // console.log('updated location.....');
         this.getAllUserState();
-      },
-      presence: (presenceEvent) => {
-          // handle presence
-        // console.log('presenceEvent: ', presenceEvent);
-      },
+      }
     });
 
     // Subscribing to secure channel
@@ -63,7 +55,6 @@ class MapView extends React.Component {
   }
 
   getAllUserState() {
-    // console.log('setting statingzzz...');
     this.pubNub.hereNow(
       {
         channels: ['secure'],
@@ -71,6 +62,7 @@ class MapView extends React.Component {
         includeState: true,
       },
       (status, response) => {
+        console.log('here now: ', response);
         this.setState({
           ...this.state,
           users: response.channels.secure.occupants,
@@ -111,18 +103,18 @@ class MapView extends React.Component {
   }
 
   updateLocation(lat, lng) {
-    // console.log('updating location');
     this.pubNub.setState(
       {
-        state: { 'username': this.username, 'password': this.password, 'lat': lat, 'lng': lng},
+        state: { 'username': this.state.username, 'password': this.state.password, 'lat': lat, 'lng': lng},
         channels: ['secure'],
       },
         (status, response) => {
+          console.log('set state res: ', response);
           const publishConfig = {
             channel: 'secure',
             message: {
-              username: '',
-              password: 'lala',
+              username: this.state.username,
+              password: this.state.password,
               lat,
               lng,
             },
@@ -133,12 +125,13 @@ class MapView extends React.Component {
               navigator.geolocation.getCurrentPosition((currentPosition) => {
                 this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
               },
-            (error) => {
-                console.log('Error: ', error);
-            },
-            { enableHighAccuracy: true }
-            );
-            }, 20);});
+                (error) => {
+                  console.log('Error: ', error);
+                },
+                { enableHighAccuracy: true }
+              );
+            }, 200);
+          });
         }
     );
   }
