@@ -45,16 +45,16 @@ function checkForCorrectPassword(inputId, username, onCorrectPassword) {
     let insult;
     switch(index) {
       case 0:
-        insult = "Mr Moony begs " + username + " to keep his abnormally large nose out of other people's business."
+        insult = "Angus begs " + username + " to keep their abnormally large nose out of other people's business."
         break;
       case 1:
-        insult = "Mr Prongs would like to say that " + username + " is an ugly git.";
+        insult = "Faraz would like to say that " + username + " is an ugly git.";
         break;
       case 2:
-        insult = "Mr Padfoot would like to register his astonishment that an idiot like " + username + " ever became a Professor."
+        insult = "Mic would like to register his astonishment that an idiot like " + username + " ever became a developer."
         break;
       case default:
-        insult = "Mr Wormtail bids " + username + " good day, and advises him to wash his hair, the slime-ball."
+        insult = "Daryl bids " + username + " good day, and advises them to wash their slimey hair."
     }
     return insult;
   }
@@ -66,7 +66,9 @@ function checkForCorrectPassword(inputId, username, onCorrectPassword) {
 function checkForCorrectGoodbye(inputId, onGoodbye) {
   const validGoodbyes = [
     "Mischief managed",
-    "Mischief managed. "
+    "Mischief managed. ",
+    "Please close",
+    "Please close. "
   ];
   const onTimeout = () => {};
 
