@@ -31,31 +31,69 @@ function say(text) {
     });
 }
 
-function checkForCorrectPassword(inputId, onCorrectPassword) {
-  let correct = false;
+function checkForCorrectPassword(inputId, username, onCorrectPassword) {
   const validPasswords = [
     "I solemnly swear that I'm up to no good. ",
     "I solemnly swear that I am up to no good. ",
+    "Please open",
+    "Please open. ",
     "Open",
     "Open. "
   ];
-  let password = $('#password');
-  console.log(password, password.text());
+  function getInsult(username) {
+    let index = getRandomInt(0, 3);
+    let insult;
+    switch(index) {
+      case 0:
+        insult = "Mr Moony begs " + username + " to keep his abnormally large nose out of other people's business."
+        break;
+      case 1:
+        insult = "Mr Prongs would like to say that " + username + " is an ugly git.";
+        break;
+      case 2:
+        insult = "Mr Padfoot would like to register his astonishment that an idiot like " + username + " ever became a Professor."
+        break;
+      case default:
+        insult = "Mr Wormtail bids " + username + " good day, and advises him to wash his hair, the slime-ball."
+    }
+    return insult;
+  }
+  const onTimeout = () => { say(getInsult(username)); };
+
+  checkSpeechMatches(inputId, validPasswords, onCorrectPassword, onTimeout, 5000);
+}
+
+function checkForCorrectGoodbye(inputId, onGoodbye) {
+  const validGoodbyes = [
+    "Mischief managed",
+    "Mischief managed. "
+  ];
+  const onTimeout = () => {};
+
+  checkSpeechMatches(inputId, validGoodbyes, onGoodbye, onTimeout, 3000);
+}
+
+function checkSpeechMatches(speechId, matches, onCorrect, onTimeout, timeout) {
+  let correct = false;
+  let speech = $('#' + speechId);
 
   let observer = new MutationObserver((mutations) => {
-    console.log('"' + password.text() + '"');
-    if (validPasswords.includes(password.text())) {
+    console.log('"' + speech.text() + '"');
+    if (matches.includes(speech.text())) {
       correct = true;
-      console.log('naughty!');
-      onCorrectPassword();
+      onCorrect();
     }
   });
 
-  observer.observe(password.get(0), {characterData: true, childList: true});
+  observer.observe(speech.get(0), {characterData: true, childList: true});
 
   setTimeout(() => {
-    if (!correct) { say('fuck off snape'); }
-  }, 5000);
+    if (!correct) { onTimeout(); }
+  }, (timeout || 5000));
 }
 
-export { getTextFromMic, checkForCorrectPassword, say };
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export { getTextFromMic, checkForCorrectPassword, checkForCorrectGoodbye };

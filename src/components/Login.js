@@ -1,7 +1,7 @@
 import React from 'react';
 import { RaisedButton, TextField } from 'material-ui';
 import { browserHistory } from 'react-router';
-import { getTextFromMic, checkForCorrectPassword, say } from './../utils/speech.js';
+import { getTextFromMic, checkForCorrectPassword, checkForCorrectGoodbye } from './../utils/speech.js';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -52,7 +52,7 @@ class Login extends React.Component {
           label="Reveal..."
           onClick={() => {
             getTextFromMic('password');
-            checkForCorrectPassword('password', () => {
+            checkForCorrectPassword('password', this.state.username, () => {
               browserHistory.push(`/mischief/${this.state.username}`);
             });
           }}
