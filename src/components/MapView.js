@@ -25,14 +25,14 @@ class MapView extends React.Component {
         // console.log('statusEvent: ', statusEvent);
       },
       message: (message) => {
-        console.log(message);
+        // console.log(message);
         // get all users]
-        console.log('updated location.....');
+        // console.log('updated location.....');
         this.getAllUserState();
       },
       presence: (presenceEvent) => {
           // handle presence
-        console.log('presenceEvent: ', presenceEvent);
+        // console.log('presenceEvent: ', presenceEvent);
       },
     });
 
@@ -44,6 +44,11 @@ class MapView extends React.Component {
     this.getAllUserState();
 
     navigator.geolocation.getCurrentPosition((currentPosition) => {
+      this.setState({
+        ...this.state,
+        lat: currentPosition.coords.latitude,
+        lng: currentPosition.coords.longitude,
+      });
       this.updateLocation(currentPosition.coords.latitude, currentPosition.coords.longitude);
     },
     (error) => {
@@ -58,7 +63,7 @@ class MapView extends React.Component {
   }
 
   getAllUserState() {
-    console.log('setting statingzzz...');
+    // console.log('setting statingzzz...');
     this.pubNub.hereNow(
       {
         channels: ['secure'],
@@ -76,7 +81,6 @@ class MapView extends React.Component {
 
   render() {
     const position = [this.state.lat, this.state.lng];
-
     return (
       <div>
         <Map
@@ -89,7 +93,6 @@ class MapView extends React.Component {
           {
             this.state.users.map((user) => {
               const userPosition = [user.state.lat, user.state.lng];
-
               return (
                 <Marker
                   key={user.uuid}
@@ -108,7 +111,7 @@ class MapView extends React.Component {
   }
 
   updateLocation(lat, lng) {
-    console.log('updating location');
+    // console.log('updating location');
     this.pubNub.setState(
       {
         state: { 'username': this.username, 'password': this.password, 'lat': lat, 'lng': lng},
