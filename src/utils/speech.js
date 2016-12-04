@@ -53,7 +53,7 @@ function checkForCorrectPassword(inputId, username, onCorrectPassword) {
       case 2:
         insult = "Mic would like to register his astonishment that an idiot like " + username + " ever became a developer."
         break;
-      case default:
+      default:
         insult = "Daryl bids " + username + " good day, and advises them to wash their slimey hair."
     }
     return insult;
