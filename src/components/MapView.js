@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import FloatingActionButton from 'material-ui';
+import { browserHistory } from 'react-router';
 import { getTextFromMic, checkForCorrectPassword, checkForCorrectGoodbye } from './../utils/speech.js';
 
 class MapView extends React.Component {

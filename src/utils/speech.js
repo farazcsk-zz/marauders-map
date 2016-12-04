@@ -60,7 +60,7 @@ function checkForCorrectPassword(inputId, username, onCorrectPassword) {
   }
   const onTimeout = () => { say(getInsult(username)); };
 
-  checkSpeechMatches(inputId, validPasswords, onCorrectPassword, onTimeout, 5000);
+  checkSpeechMatches(inputId, validPasswords, onCorrectPassword, onTimeout, 6000);
 }
 
 function checkForCorrectGoodbye(inputId, onGoodbye) {
