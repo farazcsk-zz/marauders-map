@@ -39,3 +39,4 @@ dist
 e2e/robot/test_results
 
 .idea
+.vscode
